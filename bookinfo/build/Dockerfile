@@ -6,13 +6,15 @@ ENV GO111MODULE=on \
 COPY . /go/src/github.com/cloudwego/biz-demo/bookinfo
 WORKDIR /go/src/github.com/cloudwego/biz-demo/bookinfo
 
-RUN make build-linux
+#RUN make build-linux
 
 FROM nicolaka/netshoot
 RUN mkdir -p /app && \
     chown -R nobody:nogroup /app
 COPY --from=builder /go/src/github.com/cloudwego/biz-demo/bookinfo/bin/bookinfo /app
 COPY --from=builder /go/src/github.com/cloudwego/biz-demo/bookinfo/conf /app/conf
+COPY --from=builder /go/src/github.com/cloudwego/biz-demo/bookinfo/products /app/products
+COPY --from=builder /go/src/github.com/cloudwego/biz-demo/bookinfo/html /app/html
 
 USER        nobody
 WORKDIR     /app

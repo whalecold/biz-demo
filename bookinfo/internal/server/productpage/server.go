@@ -63,9 +63,12 @@ func (s *Server) Run(ctx context.Context) error {
 		tracer,
 		hertzserver.WithHostPorts(s.opts.Addr),
 	)
+	h.Static("/products/static", "./")
+	h.LoadHTMLGlob("html/*")
+
 	h.Use(hertztracing.ServerMiddleware(cfg))
 
-	h.GET("/api/v1/products/:productID", s.handler.GetProduct)
+	h.GET("/products/:productID", s.handler.GetProduct)
 
 	h.Spin()
 

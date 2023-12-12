@@ -38,9 +38,11 @@ func (i *impl) GetProduct(ctx context.Context, req *details.GetProductReq) (r *d
 	return &details.GetProductResp{
 		Product: &details.Product{
 			ID:          req.GetID(),
-			Title:       "《Also sprach Zarathustra》",
+			Title:       "Also sprach Zarathustra",
 			Author:      "Friedrich Nietzsche",
-			Description: `Thus Spoke Zarathustra: A Book for All and None, also translated as Thus Spake Zarathustra, is a work of philosophical fiction written by German philosopher Friedrich Nietzsche between 1883 and 1885.`,
+			Description: `A Book for All and None, also translated as Thus Spake Zarathustra, is a work of philosophical fiction written by German philosopher Friedrich Nietzsche between 1883 and 1885.`,
+			Link:        "https://en.wikipedia.org/wiki/Thus_Spoke_Zarathustra",
+			AuthorLink:  "https://en.wikipedia.org/wiki/Friedrich_Nietzsche",
 		},
 	}, nil
 }

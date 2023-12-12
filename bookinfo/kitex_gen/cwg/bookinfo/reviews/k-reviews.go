@@ -33,6 +33,7 @@ func (p *Review) FastRead(buf []byte) (int, error) {
 	var fieldId int16
 	var issetType bool = false
 	var issetRating bool = false
+	var issetReviewsInstance bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -79,6 +80,21 @@ func (p *Review) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField3(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetReviewsInstance = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -106,6 +122,11 @@ func (p *Review) FastRead(buf []byte) (int, error) {
 
 	if !issetRating {
 		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetReviewsInstance {
+		fieldId = 3
 		goto RequiredFieldNotSetError
 	}
 	return offset, nil
@@ -153,6 +174,20 @@ func (p *Review) FastReadField2(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *Review) FastReadField3(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		p.ReviewsInstance = v
+
+	}
+	return offset, nil
+}
+
 // for compatibility
 func (p *Review) FastWrite(buf []byte) int {
 	return 0
@@ -164,6 +199,7 @@ func (p *Review) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWriter) 
 	if p != nil {
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
+		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -176,6 +212,7 @@ func (p *Review) BLength() int {
 	if p != nil {
 		l += p.field1Length()
 		l += p.field2Length()
+		l += p.field3Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -200,6 +237,15 @@ func (p *Review) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) 
 	return offset
 }
 
+func (p *Review) fastWriteField3(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "ReviewsInstance", thrift.STRING, 3)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.ReviewsInstance)
+
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
 func (p *Review) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("Type", thrift.I32, 1)
@@ -213,6 +259,15 @@ func (p *Review) field2Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("Rating", thrift.BYTE, 2)
 	l += bthrift.Binary.ByteLength(p.Rating)
+
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *Review) field3Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("ReviewsInstance", thrift.STRING, 3)
+	l += bthrift.Binary.StringLengthNocopy(p.ReviewsInstance)
 
 	l += bthrift.Binary.FieldEndLength()
 	return l

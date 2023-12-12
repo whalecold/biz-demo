@@ -22,7 +22,7 @@ spec:
         app.kubernetes.io/instance: {{ .Values.service.name }}
         app.kubernetes.io/name: {{ .Values.service.name }}
         version: v2
-        sidecar.mesh.io/lane: blue
+        sidecar.mesh.io/lane: gray
     spec:
       containers:
         - args:

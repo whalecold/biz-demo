@@ -35,6 +35,8 @@ func (p *Product) FastRead(buf []byte) (int, error) {
 	var issetTitle bool = false
 	var issetAuthor bool = false
 	var issetDescription bool = false
+	var issetAuthorLink bool = false
+	var issetLink bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -111,6 +113,36 @@ func (p *Product) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 5:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField5(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetAuthorLink = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 6:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField6(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetLink = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -148,6 +180,16 @@ func (p *Product) FastRead(buf []byte) (int, error) {
 
 	if !issetDescription {
 		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetAuthorLink {
+		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetLink {
+		fieldId = 6
 		goto RequiredFieldNotSetError
 	}
 	return offset, nil
@@ -223,6 +265,34 @@ func (p *Product) FastReadField4(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *Product) FastReadField5(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		p.AuthorLink = v
+
+	}
+	return offset, nil
+}
+
+func (p *Product) FastReadField6(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		p.Link = v
+
+	}
+	return offset, nil
+}
+
 // for compatibility
 func (p *Product) FastWrite(buf []byte) int {
 	return 0
@@ -236,6 +306,8 @@ func (p *Product) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWriter)
 		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 		offset += p.fastWriteField3(buf[offset:], binaryWriter)
 		offset += p.fastWriteField4(buf[offset:], binaryWriter)
+		offset += p.fastWriteField5(buf[offset:], binaryWriter)
+		offset += p.fastWriteField6(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -250,6 +322,8 @@ func (p *Product) BLength() int {
 		l += p.field2Length()
 		l += p.field3Length()
 		l += p.field4Length()
+		l += p.field5Length()
+		l += p.field6Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -292,6 +366,24 @@ func (p *Product) fastWriteField4(buf []byte, binaryWriter bthrift.BinaryWriter)
 	return offset
 }
 
+func (p *Product) fastWriteField5(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "AuthorLink", thrift.STRING, 5)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.AuthorLink)
+
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
+func (p *Product) fastWriteField6(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "Link", thrift.STRING, 6)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.Link)
+
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
 func (p *Product) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("ID", thrift.STRING, 1)
@@ -323,6 +415,24 @@ func (p *Product) field4Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("Description", thrift.STRING, 4)
 	l += bthrift.Binary.StringLengthNocopy(p.Description)
+
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *Product) field5Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("AuthorLink", thrift.STRING, 5)
+	l += bthrift.Binary.StringLengthNocopy(p.AuthorLink)
+
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *Product) field6Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("Link", thrift.STRING, 6)
+	l += bthrift.Binary.StringLengthNocopy(p.Link)
 
 	l += bthrift.Binary.FieldEndLength()
 	return l

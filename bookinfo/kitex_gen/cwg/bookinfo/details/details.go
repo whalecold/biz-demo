@@ -14,6 +14,8 @@ type Product struct {
 	Title       string `thrift:"Title,2,required" frugal:"2,required,string" json:"Title"`
 	Author      string `thrift:"Author,3,required" frugal:"3,required,string" json:"Author"`
 	Description string `thrift:"Description,4,required" frugal:"4,required,string" json:"Description"`
+	AuthorLink  string `thrift:"AuthorLink,5,required" frugal:"5,required,string" json:"AuthorLink"`
+	Link        string `thrift:"Link,6,required" frugal:"6,required,string" json:"Link"`
 }
 
 func NewProduct() *Product {
@@ -39,6 +41,14 @@ func (p *Product) GetAuthor() (v string) {
 func (p *Product) GetDescription() (v string) {
 	return p.Description
 }
+
+func (p *Product) GetAuthorLink() (v string) {
+	return p.AuthorLink
+}
+
+func (p *Product) GetLink() (v string) {
+	return p.Link
+}
 func (p *Product) SetID(val string) {
 	p.ID = val
 }
@@ -51,12 +61,20 @@ func (p *Product) SetAuthor(val string) {
 func (p *Product) SetDescription(val string) {
 	p.Description = val
 }
+func (p *Product) SetAuthorLink(val string) {
+	p.AuthorLink = val
+}
+func (p *Product) SetLink(val string) {
+	p.Link = val
+}
 
 var fieldIDToName_Product = map[int16]string{
 	1: "ID",
 	2: "Title",
 	3: "Author",
 	4: "Description",
+	5: "AuthorLink",
+	6: "Link",
 }
 
 func (p *Product) Read(iprot thrift.TProtocol) (err error) {
@@ -67,6 +85,8 @@ func (p *Product) Read(iprot thrift.TProtocol) (err error) {
 	var issetTitle bool = false
 	var issetAuthor bool = false
 	var issetDescription bool = false
+	var issetAuthorLink bool = false
+	var issetLink bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -126,6 +146,28 @@ func (p *Product) Read(iprot thrift.TProtocol) (err error) {
 					goto SkipFieldError
 				}
 			}
+		case 5:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField5(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetAuthorLink = true
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 6:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField6(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetLink = true
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -157,6 +199,16 @@ func (p *Product) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetDescription {
 		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetAuthorLink {
+		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetLink {
+		fieldId = 6
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -213,6 +265,24 @@ func (p *Product) ReadField4(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *Product) ReadField5(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.AuthorLink = v
+	}
+	return nil
+}
+
+func (p *Product) ReadField6(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Link = v
+	}
+	return nil
+}
+
 func (p *Product) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("Product"); err != nil {
@@ -233,6 +303,14 @@ func (p *Product) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField4(oprot); err != nil {
 			fieldId = 4
+			goto WriteFieldError
+		}
+		if err = p.writeField5(oprot); err != nil {
+			fieldId = 5
+			goto WriteFieldError
+		}
+		if err = p.writeField6(oprot); err != nil {
+			fieldId = 6
 			goto WriteFieldError
 		}
 
@@ -322,6 +400,40 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
+func (p *Product) writeField5(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("AuthorLink", thrift.STRING, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.AuthorLink); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
+}
+
+func (p *Product) writeField6(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Link", thrift.STRING, 6); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Link); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
+}
+
 func (p *Product) String() string {
 	if p == nil {
 		return "<nil>"
@@ -345,6 +457,12 @@ func (p *Product) DeepEqual(ano *Product) bool {
 		return false
 	}
 	if !p.Field4DeepEqual(ano.Description) {
+		return false
+	}
+	if !p.Field5DeepEqual(ano.AuthorLink) {
+		return false
+	}
+	if !p.Field6DeepEqual(ano.Link) {
 		return false
 	}
 	return true
@@ -374,6 +492,20 @@ func (p *Product) Field3DeepEqual(src string) bool {
 func (p *Product) Field4DeepEqual(src string) bool {
 
 	if strings.Compare(p.Description, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *Product) Field5DeepEqual(src string) bool {
+
+	if strings.Compare(p.AuthorLink, src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *Product) Field6DeepEqual(src string) bool {
+
+	if strings.Compare(p.Link, src) != 0 {
 		return false
 	}
 	return true

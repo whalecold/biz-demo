@@ -14,31 +14,31 @@ import (
 type ReviewType int64
 
 const (
-	ReviewType_Local ReviewType = 0
-	ReviewType_Blue  ReviewType = 1
-	ReviewType_Green ReviewType = 2
+	ReviewType_Black ReviewType = 0
+	ReviewType_Gray  ReviewType = 1
+	ReviewType_Blue  ReviewType = 2
 )
 
 func (p ReviewType) String() string {
 	switch p {
-	case ReviewType_Local:
-		return "Local"
+	case ReviewType_Black:
+		return "Black"
+	case ReviewType_Gray:
+		return "Gray"
 	case ReviewType_Blue:
 		return "Blue"
-	case ReviewType_Green:
-		return "Green"
 	}
 	return "<UNSET>"
 }
 
 func ReviewTypeFromString(s string) (ReviewType, error) {
 	switch s {
-	case "Local":
-		return ReviewType_Local, nil
+	case "Black":
+		return ReviewType_Black, nil
+	case "Gray":
+		return ReviewType_Gray, nil
 	case "Blue":
 		return ReviewType_Blue, nil
-	case "Green":
-		return ReviewType_Green, nil
 	}
 	return ReviewType(0), fmt.Errorf("not a valid ReviewType string")
 }
@@ -59,8 +59,9 @@ func (p *ReviewType) Value() (driver.Value, error) {
 }
 
 type Review struct {
-	Type   ReviewType `thrift:"Type,1,required" frugal:"1,required,ReviewType" json:"Type"`
-	Rating int8       `thrift:"Rating,2,required" frugal:"2,required,i8" json:"Rating"`
+	Type            ReviewType `thrift:"Type,1,required" frugal:"1,required,ReviewType" json:"Type"`
+	Rating          int8       `thrift:"Rating,2,required" frugal:"2,required,i8" json:"Rating"`
+	ReviewsInstance string     `thrift:"ReviewsInstance,3,required" frugal:"3,required,string" json:"ReviewsInstance"`
 }
 
 func NewReview() *Review {
@@ -78,16 +79,24 @@ func (p *Review) GetType() (v ReviewType) {
 func (p *Review) GetRating() (v int8) {
 	return p.Rating
 }
+
+func (p *Review) GetReviewsInstance() (v string) {
+	return p.ReviewsInstance
+}
 func (p *Review) SetType(val ReviewType) {
 	p.Type = val
 }
 func (p *Review) SetRating(val int8) {
 	p.Rating = val
 }
+func (p *Review) SetReviewsInstance(val string) {
+	p.ReviewsInstance = val
+}
 
 var fieldIDToName_Review = map[int16]string{
 	1: "Type",
 	2: "Rating",
+	3: "ReviewsInstance",
 }
 
 func (p *Review) Read(iprot thrift.TProtocol) (err error) {
@@ -96,6 +105,7 @@ func (p *Review) Read(iprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	var issetType bool = false
 	var issetRating bool = false
+	var issetReviewsInstance bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -133,6 +143,17 @@ func (p *Review) Read(iprot thrift.TProtocol) (err error) {
 					goto SkipFieldError
 				}
 			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetReviewsInstance = true
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -154,6 +175,11 @@ func (p *Review) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetRating {
 		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetReviewsInstance {
+		fieldId = 3
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -192,6 +218,15 @@ func (p *Review) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *Review) ReadField3(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.ReviewsInstance = v
+	}
+	return nil
+}
+
 func (p *Review) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("Review"); err != nil {
@@ -204,6 +239,10 @@ func (p *Review) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 
@@ -259,6 +298,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
+func (p *Review) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ReviewsInstance", thrift.STRING, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.ReviewsInstance); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
 func (p *Review) String() string {
 	if p == nil {
 		return "<nil>"
@@ -278,6 +334,9 @@ func (p *Review) DeepEqual(ano *Review) bool {
 	if !p.Field2DeepEqual(ano.Rating) {
 		return false
 	}
+	if !p.Field3DeepEqual(ano.ReviewsInstance) {
+		return false
+	}
 	return true
 }
 
@@ -291,6 +350,13 @@ func (p *Review) Field1DeepEqual(src ReviewType) bool {
 func (p *Review) Field2DeepEqual(src int8) bool {
 
 	if p.Rating != src {
+		return false
+	}
+	return true
+}
+func (p *Review) Field3DeepEqual(src string) bool {
+
+	if strings.Compare(p.ReviewsInstance, src) != 0 {
 		return false
 	}
 	return true

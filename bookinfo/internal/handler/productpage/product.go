@@ -18,11 +18,11 @@ package productpage
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/base"
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/details"
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/details/detailsservice"
-	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/product"
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/reviews"
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/reviews/reviewsservice"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -82,15 +82,40 @@ func (h *Handler) GetProduct(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	p := detailsResp.GetProduct()
-	resp := &product.Product{
-		ID:          productID,
-		Title:       p.GetTitle(),
-		Author:      p.GetAuthor(),
-		Description: p.GetDescription(),
-		Rating:      reviewsResp.GetReview().GetRating(),
-		Color:       reviewsResp.GetReview().GetType().String(),
-	}
+	c.HTML(http.StatusOK, "productpage.html", renderStart(productID, reviewsResp, detailsResp))
+}
 
-	c.JSON(http.StatusOK, resp)
+func renderStart(id string, reviews *reviews.ReviewResp, detailResp *details.GetProductResp) *templateRender {
+	tr := &templateRender{
+		ID:              id,
+		Title:           detailResp.GetProduct().GetTitle(),
+		Author:          detailResp.GetProduct().GetAuthor(),
+		Description:     detailResp.GetProduct().GetDescription(),
+		FullStarts:      map[int8]string{},
+		EmptyStarts:     map[int8]string{},
+		Color:           strings.ToLower(reviews.GetReview().GetType().String()),
+		ReviewsInstance: reviews.GetReview().GetReviewsInstance(),
+		Link:            detailResp.GetProduct().GetLink(),
+		AuthorLink:      detailResp.GetProduct().GetAuthorLink(),
+	}
+	for i := int8(0); i < reviews.GetReview().GetRating(); i++ {
+		tr.FullStarts[i] = ""
+	}
+	for i := int8(5); i > reviews.GetReview().GetRating(); i-- {
+		tr.EmptyStarts[i] = ""
+	}
+	return tr
+}
+
+type templateRender struct {
+	ReviewsInstance string
+	ID              string
+	Color           string
+	FullStarts      map[int8]string
+	EmptyStarts     map[int8]string
+	Author          string
+	Description     string
+	Title           string
+	Link            string
+	AuthorLink      string
 }

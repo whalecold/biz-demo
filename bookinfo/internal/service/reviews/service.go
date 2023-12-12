@@ -43,18 +43,18 @@ func (i *impl) ReviewProduct(ctx context.Context, req *reviews.ReviewReq) (r *re
 	if os.Getenv(constants.EnableRatingsEnvKey) == constants.Disable {
 		return &reviews.ReviewResp{
 			Review: &reviews.Review{
-				Type:   reviews.ReviewType_Local,
+				Type:   reviews.ReviewType_Black,
 				Rating: 0,
 			},
 		}, err
 	}
 
-	color := reviews.ReviewType_Local
+	color := reviews.ReviewType_Black
 	switch os.Getenv(constants.ReviewColorEnvKey) {
+	case "gray":
+		color = reviews.ReviewType_Gray
 	case "blue":
 		color = reviews.ReviewType_Blue
-	case "green":
-		color = reviews.ReviewType_Green
 	}
 
 	klog.Info("hello color ", color.String())
@@ -66,8 +66,9 @@ func (i *impl) ReviewProduct(ctx context.Context, req *reviews.ReviewReq) (r *re
 
 	return &reviews.ReviewResp{
 		Review: &reviews.Review{
-			Type:   color,
-			Rating: ratingResp.GetRating(),
+			Type:            color,
+			Rating:          ratingResp.GetRating(),
+			ReviewsInstance: os.Getenv(constants.PodName),
 		},
 	}, nil
 }

@@ -17,14 +17,15 @@ include "base.thrift"
 namespace go cwg.bookinfo.reviews
 
 enum ReviewType {
-    Local,
-    Blue,
-    Green
+    Black,
+    Gray,
+    Blue
 }
 
 struct Review {
     1: required ReviewType Type,
     2: required i8 Rating,
+	3: required string ReviewsInstance,
 }
 
 struct ReviewReq {

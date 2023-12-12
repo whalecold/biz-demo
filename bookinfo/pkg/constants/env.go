@@ -22,6 +22,8 @@ const (
 	RatingsValueEnvKey = "RATINGS_VALUE"
 	// ReviewColorEnvKey review type.
 	ReviewColorEnvKey = "REVIEWS_COLOR"
+	// PodName name
+	PodName = "POD_NAME"
 )
 
 const (

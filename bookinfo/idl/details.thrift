@@ -22,6 +22,8 @@ struct Product {
     2: required string Title,
     3: required string Author,
     4: required string Description,
+	5: required string AuthorLink,
+	6: required string Link,
 }
 
 struct GetProductReq {
