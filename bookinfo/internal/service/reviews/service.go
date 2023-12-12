@@ -49,6 +49,15 @@ func (i *impl) ReviewProduct(ctx context.Context, req *reviews.ReviewReq) (r *re
 		}, err
 	}
 
+	color := reviews.ReviewType_Local
+	switch os.Getenv(constants.ReviewColorEnvKey) {
+	case "blue":
+		color = reviews.ReviewType_Blue
+	case "green":
+		color = reviews.ReviewType_Green
+	}
+
+	klog.Info("hello color ", color.String())
 	ratingResp, err := i.ratingsClient.Ratings(ctx, &ratings.RatingReq{ProductID: req.GetProductID()})
 	if err != nil {
 		klog.CtxErrorf(ctx, "call ratings error: %s", err.Error())
@@ -57,7 +66,7 @@ func (i *impl) ReviewProduct(ctx context.Context, req *reviews.ReviewReq) (r *re
 
 	return &reviews.ReviewResp{
 		Review: &reviews.Review{
-			Type:   reviews.ReviewType_Green,
+			Type:   color,
 			Rating: ratingResp.GetRating(),
 		},
 	}, nil

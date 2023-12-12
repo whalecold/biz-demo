@@ -89,6 +89,7 @@ func (h *Handler) GetProduct(ctx context.Context, c *app.RequestContext) {
 		Author:      p.GetAuthor(),
 		Description: p.GetDescription(),
 		Rating:      reviewsResp.GetReview().GetRating(),
+		Color:       reviewsResp.GetReview().GetType().String(),
 	}
 
 	c.JSON(http.StatusOK, resp)

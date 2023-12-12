@@ -20,6 +20,8 @@ const (
 	EnableRatingsEnvKey = "ENABLE_RATINGS"
 	// RatingsValueEnvKey ratings value env key
 	RatingsValueEnvKey = "RATINGS_VALUE"
+	// ReviewColorEnvKey review type.
+	ReviewColorEnvKey = "REVIEWS_COLOR"
 )
 
 const (

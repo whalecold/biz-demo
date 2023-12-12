@@ -21,13 +21,15 @@ spec:
         app.kubernetes.io/instance: {{ .Values.service.name }}
         app.kubernetes.io/name: {{ .Values.service.name }}
         version: v2
-        sidecar.mesh.io/lane: gray
+        sidecar.mesh.io/lane: blue
     spec:
       containers:
         - args:
             - {{ .Values.service.name }}
             - --config=config/{{ .Values.service.name }}.yaml
           env:
+            - name: REVIEWS_COLOR
+              value: blue
             - name: serverAddr
               value: {{ .Values.global.nacosAddress }}
             - name: serverPort

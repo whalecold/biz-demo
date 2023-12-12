@@ -20,6 +20,7 @@ spec:
       labels:
         app.kubernetes.io/instance: {{ .Values.service.name }}
         app.kubernetes.io/name: {{ .Values.service.name }}
+        sidecar.mesh.io/lane: green
         version: v3
     spec:
       containers:
@@ -27,6 +28,8 @@ spec:
             - {{ .Values.service.name }}
             - --config=config/{{ .Values.service.name }}.yaml
           env:
+            - name: REVIEWS_COLOR
+              value: green
             - name: serverAddr
               value: {{ .Values.global.nacosAddress }}
             - name: serverPort
@@ -35,8 +38,6 @@ spec:
               value: service.version=v3
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               value: {{ .Values.global.otel.endpoint }}
-            - name: ENABLE_RATINGS
-              value: "disable"
             - name: TZ
               value: Asia/Shanghai
             - name: POD_NAMESPACE
