@@ -17,18 +17,23 @@ package reviews
 
 import (
 	"context"
+	"io/ioutil"
 	"net"
+	"strings"
 
+	"code.byted.org/kite/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/ratings/ratingservice"
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/reviews"
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/reviews/reviewsservice"
 	"github.com/cloudwego/biz-demo/bookinfo/pkg/constants"
+	"github.com/cloudwego/biz-demo/bookinfo/pkg/utils"
 	"github.com/cloudwego/biz-demo/bookinfo/pkg/utils/logutils"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/server"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
+	"github.com/kitex-contrib/registry-nacos/registry"
 )
 
 // Server reviews server
@@ -52,6 +57,23 @@ func DefaultServerOptions() *ServerOptions {
 	}
 }
 
+func extractMetaInfo(file string) map[string]string {
+	data, err := ioutil.ReadFile(file)
+	if err != nil {
+		klog.Warnf("load metadata failed: %v", err)
+	}
+	tags := make(map[string]string)
+	lines := strings.Split(string(data), "\n")
+	for _, line := range lines {
+		parts := strings.Split(line, "=")
+		if len(parts) != 2 {
+			continue
+		}
+		tags[parts[0]] = strings.ReplaceAll(parts[1], "\"", "")
+	}
+	return tags
+}
+
 // Run reviews server
 func (s *Server) Run(ctx context.Context) error {
 	klog.SetLogger(kitexlogrus.NewLogger())
@@ -69,9 +91,20 @@ func (s *Server) Run(ctx context.Context) error {
 	if err != nil {
 		klog.Fatal(err)
 	}
+
+	r, err := registry.NewDefaultNacosRegistry()
+	if err != nil {
+		panic(err)
+	}
+	klog.Errorf("init nacos registry client completed.")
 	svr := reviewsservice.NewServer(
 		s.svc,
 		server.WithServiceAddr(addr),
+		server.WithRegistry(r),
+		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
+			ServiceName: constants.ReviewsServiceName,
+			Tags:        utils.ExtractInstanceMeta(),
+		}),
 		server.WithSuite(tracing.NewServerSuite()),
 	)
 	if err := svr.Run(); err != nil {

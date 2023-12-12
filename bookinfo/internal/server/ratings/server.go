@@ -19,15 +19,18 @@ import (
 	"context"
 	"net"
 
+	"code.byted.org/kite/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/ratings"
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/ratings/ratingservice"
 	"github.com/cloudwego/biz-demo/bookinfo/pkg/constants"
+	"github.com/cloudwego/biz-demo/bookinfo/pkg/utils"
 	"github.com/cloudwego/biz-demo/bookinfo/pkg/utils/logutils"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/server"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
+	"github.com/kitex-contrib/registry-nacos/registry"
 )
 
 // Server ratings server
@@ -67,9 +70,19 @@ func (s *Server) Run(ctx context.Context) error {
 	if err != nil {
 		klog.Fatal(err)
 	}
+	r, err := registry.NewDefaultNacosRegistry()
+	if err != nil {
+		panic(err)
+	}
+
 	svr := ratingservice.NewServer(
 		s.svc,
+		server.WithRegistry(r),
 		server.WithServiceAddr(addr),
+		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
+			ServiceName: constants.RatingsServiceName,
+			Tags:        utils.ExtractInstanceMeta(),
+		}),
 		server.WithSuite(tracing.NewServerSuite()),
 	)
 	if err := svr.Run(); err != nil {

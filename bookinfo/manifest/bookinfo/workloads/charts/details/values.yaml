@@ -2,7 +2,7 @@ service:
   name: details
   port: 8084
 
-image: cr-cn-beijing.volces.com/proxyless-test/bookinfo
+image: mse-cn-beijing.cr.volces.com/demo/bookinfo
 
 otel:
   endpoint: http://host.docker.internal:4317

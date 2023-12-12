@@ -1,8 +1,11 @@
 global:
-  image: cr-cn-beijing.volces.com/cloudwego-demo/bookinfo:v1.0
+  image: mse-cn-beijing.cr.volces.com/demo/bookinfo
+  nacosAddress: nacostest.default
+  nacosPort: 8848
+  namespace: "zls-public-default-group"
   multiCluster:
-    clusterName: "" # Get the value using "kubectl config get-clusters"
-  xdsAddr: istiod.istio-system.svc:15010 # Set the address of the xDS Server
-  xdsAuth: false
+    clusterName: "cclrhro7u2ttge1ieaua0" # Get the value using "kubectl config get-clusters"
+  xdsAddr: istiod.istio-system.svc:15012 # Set the address of the xDS Server
+  xdsAuth: true
   otel:
     endpoint: http://bookinfo-demo-collector:4317

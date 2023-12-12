@@ -16,6 +16,8 @@
 package injectors
 
 import (
+	"time"
+
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/reviews/reviewsservice"
 	"github.com/cloudwego/biz-demo/bookinfo/pkg/constants"
 	"github.com/cloudwego/biz-demo/bookinfo/pkg/metadata"
@@ -63,6 +65,7 @@ func ProvideReviewClient(opts *ReviewClientOptions) (reviewsservice.Client, erro
 		}
 		return reviewsservice.NewClient(
 			opts.Endpoint, // use svc fqdn
+			kclient.WithRPCTimeout(time.Second*10),
 			kclient.WithSuite(tracing.NewClientSuite()),
 			kclient.WithXDSSuite(xds.ClientSuite{
 				RouterMiddleware: xdssuite.NewXDSRouterMiddleware(

@@ -16,6 +16,8 @@
 package injectors
 
 import (
+	"time"
+
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/details/detailsservice"
 	"github.com/cloudwego/biz-demo/bookinfo/pkg/constants"
 	"github.com/cloudwego/biz-demo/bookinfo/pkg/metadata"
@@ -64,6 +66,7 @@ func ProvideDetailsClient(opts *DetailsClientOptions) (detailsservice.Client, er
 		return detailsservice.NewClient(
 			opts.Endpoint,
 			kclient.WithSuite(tracing.NewClientSuite()),
+			kclient.WithRPCTimeout(time.Second*10),
 			kclient.WithXDSSuite(xds.ClientSuite{
 				RouterMiddleware: xdssuite.NewXDSRouterMiddleware(
 					xdssuite.WithRouterMetaExtractor(metadata.ExtractFromPropagator),

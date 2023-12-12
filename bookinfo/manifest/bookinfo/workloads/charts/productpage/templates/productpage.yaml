@@ -23,6 +23,7 @@ spec:
       labels:
         app.kubernetes.io/instance: {{ .Values.service.name }}
         app.kubernetes.io/name: {{ .Values.service.name }}
+        sidecar.mesh.io/lane: mse-base
         version: v1
     spec:
       containers:
@@ -37,9 +38,7 @@ spec:
             - name: TZ
               value: Asia/Shanghai
             - name: POD_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
+              value: {{ .Values.global.namespace }}
             - name: POD_NAME
               valueFrom:
                 fieldRef:

@@ -5,10 +5,10 @@ service:
 
 upstreamServices:
   ratings:
-    endpoints: ratings.default.svc.cluster.local:8083
+    endpoints: ratings.zls-public-default-group.svc.cluster.local:8083
     enableXDS: true
 
-image: cr-cn-beijing.volces.com/proxyless-test/bookinfo
+image: mse-cn-beijing.cr.volces.com/demo/bookinfo
 
 otel:
   endpoint: http://host.docker.internal:4317
