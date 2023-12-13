@@ -75,7 +75,7 @@ func (h *Handler) GetProduct(ctx context.Context, c *app.RequestContext) {
 
 	if err := eg.Wait(); err != nil {
 		c.JSON(http.StatusInternalServerError, &base.BaseResp{
-			StatusMessage: "internal error",
+			StatusMessage: err.Error(),
 			StatusCode:    http.StatusInternalServerError,
 			Extra:         nil,
 		})

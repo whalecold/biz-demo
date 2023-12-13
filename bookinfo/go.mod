@@ -4,7 +4,7 @@ go 1.17
 
 replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
 
-replace github.com/kitex-contrib/xds => github.com/whalecold/xds v0.0.0-20231212073339-2fa3cff03d00
+replace github.com/kitex-contrib/xds => github.com/whalecold/xds v0.0.0-20231213071524-05318c5ba6a6
 
 require (
 	code.byted.org/kite/kitex v1.14.1

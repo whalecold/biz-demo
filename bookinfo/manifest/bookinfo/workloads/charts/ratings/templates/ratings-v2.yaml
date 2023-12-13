@@ -21,6 +21,7 @@ spec:
       labels:
         app.kubernetes.io/instance: {{ .Values.service.name }}
         app.kubernetes.io/name: {{ .Values.service.name }}
+        sidecar.mesh.io/protocol: thrift
         version: v2
         sidecar.mesh.io/lane: gray
     spec:

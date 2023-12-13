@@ -6,10 +6,13 @@ image: mse-cn-beijing.cr.volces.com/demo/bookinfo
 
 upstreamServices:
   reviews:
-    endpoints: reviews.zls-public-default-group.svc.cluster.local:8082
+    #endpoints: reviews.zls-public-default-group.svc.cluster.local:8082
+    endpoints: reviews.zls-public-default-group.svc.cluster.local
     enableXDS: true
   details:
-    endpoint: details.zls-public-default-group.svc.cluster.local:8084
+    #endpoint: details.zls-public-default-group.svc.cluster.local:8084
+    endpoint: details.zls-public-default-group.svc.cluster.local
+    enableXDS: true
 
 otel:
   endpoint: http://host.docker.internal:4317

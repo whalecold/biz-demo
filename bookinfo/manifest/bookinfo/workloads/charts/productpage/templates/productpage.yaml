@@ -24,6 +24,7 @@ spec:
         app.kubernetes.io/instance: {{ .Values.service.name }}
         app.kubernetes.io/name: {{ .Values.service.name }}
         sidecar.mesh.io/lane: mse-base
+        sidecar.mesh.io/protocol: thrift
         version: v1
     spec:
       containers:
