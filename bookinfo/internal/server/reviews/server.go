@@ -46,15 +46,18 @@ type Server struct {
 
 // ServerOptions server opts
 type ServerOptions struct {
-	Addr     string         `mapstructure:"addr"`
-	LogLevel logutils.Level `mapstructure:"logLevel"`
+	Addr          string         `mapstructure:"addr"`
+	LogLevel      logutils.Level `mapstructure:"logLevel"`
+	EnableNacos   bool           `mapstructure:"enableNacos"`
+	EnableTracing bool           `mapstructure:"enableTracing"`
 }
 
 // DefaultServerOptions default opts
 func DefaultServerOptions() *ServerOptions {
 	return &ServerOptions{
-		Addr:     ":8082",
-		LogLevel: logutils.LevelInfo,
+		Addr:          ":8082",
+		LogLevel:      logutils.LevelInfo,
+		EnableTracing: false,
 	}
 }
 
@@ -93,22 +96,27 @@ func (s *Server) Run(ctx context.Context) error {
 		klog.Fatal(err)
 	}
 
-	cli, err := nacos.NewDefaultNacosClient(utils.WithAuth())
-	if err != nil {
-		klog.Fatal(err)
-	}
-
-	klog.Infof("init nacos registry client completed.")
-	svr := reviewsservice.NewServer(
-		s.svc,
+	opts := []server.Option{
 		server.WithServiceAddr(addr),
-		server.WithRegistry(registry.NewNacosRegistry(cli)),
 		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
 			ServiceName: constants.ReviewsServiceName,
 			Tags:        utils.ExtractInstanceMeta(),
 		}),
-		server.WithSuite(tracing.NewServerSuite()),
-	)
+	}
+
+	if s.opts.EnableNacos {
+		cli, err := nacos.NewDefaultNacosClient(utils.WithAuth())
+		if err != nil {
+			klog.Fatal(err)
+		}
+		opts = append(opts, server.WithRegistry(registry.NewNacosRegistry(cli)))
+	}
+	if s.opts.EnableTracing {
+		opts = append(opts, server.WithSuite(tracing.NewServerSuite()))
+	}
+
+	klog.Infof("init nacos registry client completed.")
+	svr := reviewsservice.NewServer(s.svc, opts...)
 	if err := svr.Run(); err != nil {
 		klog.Fatal(err)
 	}

@@ -14,6 +14,7 @@ func ExtractInstanceMeta() map[string]string {
 	data, err := ioutil.ReadFile(defaultMetaPath)
 	if err != nil {
 		klog.Warnf("load metadata failed: %v", err)
+		return nil
 	}
 	tags := make(map[string]string)
 	lines := strings.Split(string(data), "\n")

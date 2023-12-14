@@ -4,9 +4,15 @@ data:
     server:
       addr: "0.0.0.0:{{ .Values.service.port }}"
       logLevel: {{ .Values.service.logLevel }}
+      {{- if .Values.global.k8sRegistry }}
+      enableNacos: "false"
+      {{- else}}
+      enableNacos: "true"
+      {{- end}}
+      enableTracing: {{ .Values.global.enableTracing | quote }} 
     ratings:
       {{- if .Values.global.k8sRegistry}}
-      endpoint: {{ printf "%s.%s.svc.cluster.local:%s" .Values.upstreamServices.ratings.endpoints .Values.global.namespace .Values.global.ratings}}
+      endpoint: {{ printf "%s.%s.svc.cluster.local:%s" .Values.upstreamServices.ratings.endpoints .Values.global.namespace .Values.global.ports.ratings}}
       {{- else}}
       endpoint: {{ printf "%s.%s.svc.cluster.local" .Values.upstreamServices.ratings.endpoints .Values.global.namespace}}
       {{- end}}

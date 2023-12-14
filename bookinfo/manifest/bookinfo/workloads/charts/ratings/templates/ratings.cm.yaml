@@ -3,6 +3,12 @@ data:
   {{ .Values.service.name }}.yaml: |
     server:
       addr: "0.0.0.0:{{ .Values.service.port }}"
+      {{- if .Values.global.k8sRegistry }}
+      enableNacos: "false"
+      {{- else}}
+      enableNacos: "true"
+      {{- end}}
+      enableTracing: {{ .Values.global.enableTracing | quote }} 
 kind: ConfigMap
 metadata:
   name: {{ .Values.service.name }}
