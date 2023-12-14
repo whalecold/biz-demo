@@ -1,5 +1,5 @@
 global:
-  image: mse-cn-beijing.cr.volces.com/demo/bookinfo
+  image: mse-cn-beijing.cr.volces.com/demo/bookinfo:0.1.0.alpha.1
   k8sRegistry: false
   nacosAddress: 100.66.8.197
   nacosPort: 8848
@@ -12,3 +12,8 @@ global:
   xdsAuth: true
   otel:
     endpoint: http://bookinfo-demo-collector:4317
+
+ports:
+  details: 8084 
+  reviews: 8082
+  ratings: 8083

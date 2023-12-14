@@ -4,12 +4,20 @@ data:
     server:
       addr: "0.0.0.0:{{ .Values.service.port }}"
     reviews:
+      {{- if .Values.global.k8sRegistry}}
+      endpoint: {{ printf "%s.%s.svc.cluster.local:%s" .Values.upstreamServices.reviews.endpoints .Values.global.namespace .Values.global.reviews}}
+      {{- else}}
       endpoint: {{ printf "%s.%s.svc.cluster.local" .Values.upstreamServices.reviews.endpoints .Values.global.namespace}}
+      {{- end}}
       enableXDS: {{ .Values.upstreamServices.reviews.enableXDS }}
       xdsAddr: {{ .Values.global.xdsAddr }}
       xdsAuth: {{ .Values.global.xdsAuth }}
     details:
+      {{- if .Values.global.k8sRegistry}}
+      endpoint: {{ printf "%s.%s.svc.cluster.local:%s" .Values.upstreamServices.details.endpoint .Values.global.namespace .Values.global.details}}
+      {{- else}}
       endpoint: {{ printf "%s.%s.svc.cluster.local" .Values.upstreamServices.details.endpoint .Values.global.namespace}}
+      {{- end}}
       enableXDS: {{ .Values.upstreamServices.details.enableXDS }}
       xdsAddr: {{ .Values.global.xdsAddr }}
       xdsAuth: {{ .Values.global.xdsAuth }}
