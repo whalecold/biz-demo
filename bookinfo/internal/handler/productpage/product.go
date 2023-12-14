@@ -44,6 +44,7 @@ func New(reviewsClient reviewsservice.Client, detailsClient detailsservice.Clien
 // GetProduct get product info
 func (h *Handler) GetProduct(ctx context.Context, c *app.RequestContext) {
 	productID := c.Param("productID")
+	output := c.Query("output")
 
 	var (
 		reviewsResp *reviews.ReviewResp
@@ -82,11 +83,15 @@ func (h *Handler) GetProduct(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "productpage.html", renderStart(productID, reviewsResp, detailsResp))
+	if output == "html" {
+		c.HTML(http.StatusOK, "productpage.html", buildData(productID, reviewsResp, detailsResp))
+		return
+	}
+	c.JSON(http.StatusOK, buildData(productID, reviewsResp, detailsResp))
 }
 
-func renderStart(id string, reviews *reviews.ReviewResp, detailResp *details.GetProductResp) *templateRender {
-	tr := &templateRender{
+func buildData(id string, reviews *reviews.ReviewResp, detailResp *details.GetProductResp) *productData {
+	tr := &productData{
 		ID:              id,
 		Title:           detailResp.GetProduct().GetTitle(),
 		Author:          detailResp.GetProduct().GetAuthor(),
@@ -95,20 +100,22 @@ func renderStart(id string, reviews *reviews.ReviewResp, detailResp *details.Get
 		EmptyStarts:     map[int8]string{},
 		Color:           strings.ToLower(reviews.GetReview().GetType().String()),
 		ReviewsInstance: reviews.GetReview().GetReviewsInstance(),
+		RatingsInstance: reviews.GetReview().GetRatingsInstance(),
 		Link:            detailResp.GetProduct().GetLink(),
 		AuthorLink:      detailResp.GetProduct().GetAuthorLink(),
 	}
 	for i := int8(0); i < reviews.GetReview().GetRating(); i++ {
-		tr.FullStarts[i] = ""
+		tr.FullStarts[i] = "*"
 	}
 	for i := int8(5); i > reviews.GetReview().GetRating(); i-- {
-		tr.EmptyStarts[i] = ""
+		tr.EmptyStarts[i] = "*"
 	}
 	return tr
 }
 
-type templateRender struct {
+type productData struct {
 	ReviewsInstance string
+	RatingsInstance string
 	ID              string
 	Color           string
 	FullStarts      map[int8]string

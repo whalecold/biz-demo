@@ -23,6 +23,7 @@ struct RatingReq {
 
 struct RatingResp {
     1: required i8 Rating,
+	2: required string RatingsInstance,
 }
 
 service RatingService {

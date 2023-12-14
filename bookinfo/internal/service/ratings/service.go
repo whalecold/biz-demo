@@ -43,6 +43,7 @@ func (i *impl) Ratings(ctx context.Context, req *ratings.RatingReq) (r *ratings.
 		ratingValue = 1
 	}
 	return &ratings.RatingResp{
-		Rating: int8(ratingValue),
+		Rating:          int8(ratingValue),
+		RatingsInstance: os.Getenv(constants.PodName),
 	}, nil
 }

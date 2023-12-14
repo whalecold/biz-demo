@@ -170,6 +170,7 @@ func (p *RatingResp) FastRead(buf []byte) (int, error) {
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetRating bool = false
+	var issetRatingsInstance bool = false
 	_, l, err = bthrift.Binary.ReadStructBegin(buf)
 	offset += l
 	if err != nil {
@@ -201,6 +202,21 @@ func (p *RatingResp) FastRead(buf []byte) (int, error) {
 					goto SkipFieldError
 				}
 			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				l, err = p.FastReadField2(buf[offset:])
+				offset += l
+				if err != nil {
+					goto ReadFieldError
+				}
+				issetRatingsInstance = true
+			} else {
+				l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
+				offset += l
+				if err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			l, err = bthrift.Binary.Skip(buf[offset:], fieldTypeId)
 			offset += l
@@ -223,6 +239,11 @@ func (p *RatingResp) FastRead(buf []byte) (int, error) {
 
 	if !issetRating {
 		fieldId = 1
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetRatingsInstance {
+		fieldId = 2
 		goto RequiredFieldNotSetError
 	}
 	return offset, nil
@@ -256,6 +277,20 @@ func (p *RatingResp) FastReadField1(buf []byte) (int, error) {
 	return offset, nil
 }
 
+func (p *RatingResp) FastReadField2(buf []byte) (int, error) {
+	offset := 0
+
+	if v, l, err := bthrift.Binary.ReadString(buf[offset:]); err != nil {
+		return offset, err
+	} else {
+		offset += l
+
+		p.RatingsInstance = v
+
+	}
+	return offset, nil
+}
+
 // for compatibility
 func (p *RatingResp) FastWrite(buf []byte) int {
 	return 0
@@ -266,6 +301,7 @@ func (p *RatingResp) FastWriteNocopy(buf []byte, binaryWriter bthrift.BinaryWrit
 	offset += bthrift.Binary.WriteStructBegin(buf[offset:], "RatingResp")
 	if p != nil {
 		offset += p.fastWriteField1(buf[offset:], binaryWriter)
+		offset += p.fastWriteField2(buf[offset:], binaryWriter)
 	}
 	offset += bthrift.Binary.WriteFieldStop(buf[offset:])
 	offset += bthrift.Binary.WriteStructEnd(buf[offset:])
@@ -277,6 +313,7 @@ func (p *RatingResp) BLength() int {
 	l += bthrift.Binary.StructBeginLength("RatingResp")
 	if p != nil {
 		l += p.field1Length()
+		l += p.field2Length()
 	}
 	l += bthrift.Binary.FieldStopLength()
 	l += bthrift.Binary.StructEndLength()
@@ -292,10 +329,28 @@ func (p *RatingResp) fastWriteField1(buf []byte, binaryWriter bthrift.BinaryWrit
 	return offset
 }
 
+func (p *RatingResp) fastWriteField2(buf []byte, binaryWriter bthrift.BinaryWriter) int {
+	offset := 0
+	offset += bthrift.Binary.WriteFieldBegin(buf[offset:], "RatingsInstance", thrift.STRING, 2)
+	offset += bthrift.Binary.WriteStringNocopy(buf[offset:], binaryWriter, p.RatingsInstance)
+
+	offset += bthrift.Binary.WriteFieldEnd(buf[offset:])
+	return offset
+}
+
 func (p *RatingResp) field1Length() int {
 	l := 0
 	l += bthrift.Binary.FieldBeginLength("Rating", thrift.BYTE, 1)
 	l += bthrift.Binary.ByteLength(p.Rating)
+
+	l += bthrift.Binary.FieldEndLength()
+	return l
+}
+
+func (p *RatingResp) field2Length() int {
+	l := 0
+	l += bthrift.Binary.FieldBeginLength("RatingsInstance", thrift.STRING, 2)
+	l += bthrift.Binary.StringLengthNocopy(p.RatingsInstance)
 
 	l += bthrift.Binary.FieldEndLength()
 	return l

@@ -69,6 +69,7 @@ func (i *impl) ReviewProduct(ctx context.Context, req *reviews.ReviewReq) (r *re
 			Type:            color,
 			Rating:          ratingResp.GetRating(),
 			ReviewsInstance: os.Getenv(constants.PodName),
+			RatingsInstance: ratingResp.RatingsInstance,
 		},
 	}, nil
 }

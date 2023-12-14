@@ -1599,8 +1599,8 @@ github.com/v2pro/wombat v0.0.0-20180402055224-a56dbdcddef2/go.mod h1:wen8nMxrRrU
 github.com/vmihailenco/msgpack/v4 v4.3.11/go.mod h1:gborTTJjAo/GWTqqRjrLCn9pgNN+NXzzngzBKDPIqw4=
 github.com/vmihailenco/msgpack/v5 v5.0.0-beta.1/go.mod h1:xlngVLeyQ/Qi05oQxhQ+oTuqa03RjMwMfk/7/TCs+QI=
 github.com/vmihailenco/tagparser v0.1.1/go.mod h1:OeAg3pn3UbLjkWt+rN9oFYB6u/cQgqMEUPoW2WPyhdI=
-github.com/whalecold/xds v0.0.0-20231213071524-05318c5ba6a6 h1:r0+ZdmBpmwCrT0tnmEzUT+PBg9jpFx1sXQaABdTzxXM=
-github.com/whalecold/xds v0.0.0-20231213071524-05318c5ba6a6/go.mod h1:gsdoHS+rW+G5PRACM9UOX+aj1NuL31jOTY3U2eoG/hU=
+github.com/whalecold/xds v0.0.0-20231213151706-1decc2a5a114 h1:DMKCicenJ3m7p73w3HLTeAtYgXk4jpo6XayCRBcq23M=
+github.com/whalecold/xds v0.0.0-20231213151706-1decc2a5a114/go.mod h1:faZIsG7ZJEIK70Y+yC5b+wuGvTPGrEzeC4e8ijM4tPw=
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

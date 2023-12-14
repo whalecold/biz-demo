@@ -26,6 +26,7 @@ struct Review {
     1: required ReviewType Type,
     2: required i8 Rating,
 	3: required string ReviewsInstance,
+	4: required string RatingsInstance,
 }
 
 struct ReviewReq {
