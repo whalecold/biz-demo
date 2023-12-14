@@ -53,7 +53,7 @@ spec:
                   apiVersion: v1
                   fieldPath: metadata.name
             - name: POD_NAMESPACE
-              value: {{ .Values.global.namespace }}
+              value: {{ .Release.Namespace }}
             - name: CONSUL_HTTP_HOST
               valueFrom:
                 fieldRef:

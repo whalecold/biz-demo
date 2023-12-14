@@ -39,7 +39,7 @@ spec:
             - name: TZ
               value: Asia/Shanghai
             - name: POD_NAMESPACE
-              value: {{ .Values.global.namespace }}
+              value: {{ .Release.Namespace }}
             - name: POD_NAME
               valueFrom:
                 fieldRef:

@@ -11,6 +11,8 @@ global:
   xdsAddr: istiod.istio-system.svc:15012 # Set the address of the xDS Server
   xdsAuth: true
   enableTracing: false
+  v2lane: gray
+  v3lane: blue
   otel:
     endpoint: http://bookinfo-demo-collector:4317
 

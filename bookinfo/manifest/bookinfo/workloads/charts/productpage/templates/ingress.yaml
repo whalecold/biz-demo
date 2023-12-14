@@ -3,14 +3,14 @@ kind: Ingress
 metadata:
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      # 如果有 header   x-canary：true ，则是灰度流量，
+      # 如果有 header   x_canary: value， value 为泳道名称
       # 添加 baggage 染色标签，
       set $mseTag "meshEnv=mse-base";
-      if ($http_x_canary = "gray") {
-          set $mseTag "meshEnv=gray";
+      if ($http_x_canary = "{{.Values.global.v2lane}}") {
+          set $mseTag "meshEnv={{.Values.global.v2lane}}";
       }
-      if ($http_x_canary = "blue") {
-          set $mseTag "meshEnv=blue";
+      if ($http_x_canary = "{{.Values.global.v3lane}}") {
+          set $mseTag "meshEnv={{.Values.global.v3lane}}";
       }
       proxy_set_header baggage $mseTag;
     vke.volcengine.com/description: ""

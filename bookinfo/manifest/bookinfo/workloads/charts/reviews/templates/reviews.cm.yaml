@@ -12,9 +12,9 @@ data:
       enableTracing: {{ .Values.global.enableTracing | quote }} 
     ratings:
       {{- if .Values.global.k8sRegistry}}
-      endpoint: {{ printf "%s.%s.svc.cluster.local:%s" .Values.upstreamServices.ratings.endpoints .Values.global.namespace .Values.global.ports.ratings}}
+      endpoint: {{ printf "%s.%s.svc.cluster.local:%s" .Values.upstreamServices.ratings.endpoints .Release.Namespace .Values.global.ports.ratings}}
       {{- else}}
-      endpoint: {{ printf "%s.%s.svc.cluster.local" .Values.upstreamServices.ratings.endpoints .Values.global.namespace}}
+      endpoint: {{ printf "%s.%s.svc.cluster.local" .Values.upstreamServices.ratings.endpoints .Release.Namespace}}
       {{- end}}
       enableXDS: {{ .Values.upstreamServices.ratings.enableXDS }}
       xdsAddr: {{ .Values.global.xdsAddr }}

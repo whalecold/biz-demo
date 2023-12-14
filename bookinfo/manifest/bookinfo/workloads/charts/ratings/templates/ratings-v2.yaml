@@ -23,7 +23,7 @@ spec:
         app.kubernetes.io/name: {{ .Values.service.name }}
         sidecar.mesh.io/protocol: thrift
         version: v2
-        sidecar.mesh.io/lane: gray
+        sidecar.mesh.io/lane: {{ .Values.global.v2lane }}
     spec:
       containers:
         - args:
@@ -47,7 +47,7 @@ spec:
             - name: TZ
               value: Asia/Shanghai
             - name: POD_NAMESPACE
-              value: {{ .Values.global.namespace }}
+              value: {{ .Release.Namespace }}
             - name: POD_NAME
               valueFrom:
                 fieldRef:

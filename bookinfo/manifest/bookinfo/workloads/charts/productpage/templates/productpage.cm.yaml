@@ -5,18 +5,18 @@ data:
       addr: "0.0.0.0:{{ .Values.service.port }}"
     reviews:
       {{- if .Values.global.k8sRegistry}}
-      endpoint: {{ printf "%s.%s.svc.cluster.local:%s" .Values.upstreamServices.reviews.endpoints .Values.global.namespace .Values.global.ports.reviews}}
+      endpoint: {{ printf "%s.%s.svc.cluster.local:%s" .Values.upstreamServices.reviews.endpoints .Release.Namespace .Values.global.ports.reviews}}
       {{- else}}
-      endpoint: {{ printf "%s.%s.svc.cluster.local" .Values.upstreamServices.reviews.endpoints .Values.global.namespace}}
+      endpoint: {{ printf "%s.%s.svc.cluster.local" .Values.upstreamServices.reviews.endpoints .Release.Namespace}}
       {{- end}}
       enableXDS: {{ .Values.upstreamServices.reviews.enableXDS }}
       xdsAddr: {{ .Values.global.xdsAddr }}
       xdsAuth: {{ .Values.global.xdsAuth }}
     details:
       {{- if .Values.global.k8sRegistry}}
-      endpoint: {{ printf "%s.%s.svc.cluster.local:%s" .Values.upstreamServices.details.endpoint .Values.global.namespace .Values.global.ports.details}}
+      endpoint: {{ printf "%s.%s.svc.cluster.local:%s" .Values.upstreamServices.details.endpoint .Release.Namespace .Values.global.ports.details}}
       {{- else}}
-      endpoint: {{ printf "%s.%s.svc.cluster.local" .Values.upstreamServices.details.endpoint .Values.global.namespace}}
+      endpoint: {{ printf "%s.%s.svc.cluster.local" .Values.upstreamServices.details.endpoint .Release.Namespace}}
       {{- end}}
       enableXDS: {{ .Values.upstreamServices.details.enableXDS }}
       xdsAddr: {{ .Values.global.xdsAddr }}
