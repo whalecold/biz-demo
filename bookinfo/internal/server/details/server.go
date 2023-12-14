@@ -30,6 +30,7 @@ import (
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
+	"github.com/kitex-contrib/registry-nacos/nacos"
 	"github.com/kitex-contrib/registry-nacos/registry"
 )
 
@@ -70,14 +71,14 @@ func (s *Server) Run(ctx context.Context) error {
 	if err != nil {
 		klog.Fatal(err)
 	}
-	r, err := registry.NewDefaultNacosRegistry()
+	cli, err := nacos.NewDefaultNacosClient(utils.WithAuth())
 	if err != nil {
-		panic(err)
+		klog.Fatal(err)
 	}
 
 	svr := detailsservice.NewServer(
 		s.svc,
-		server.WithRegistry(r),
+		server.WithRegistry(registry.NewNacosRegistry(cli)),
 		server.WithServiceAddr(addr),
 		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
 			ServiceName: constants.DetailsServiceName,

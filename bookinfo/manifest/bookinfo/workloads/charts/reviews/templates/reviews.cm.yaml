@@ -5,7 +5,7 @@ data:
       addr: "0.0.0.0:{{ .Values.service.port }}"
       logLevel: {{ .Values.service.logLevel }}
     ratings:
-      endpoint: {{ .Values.upstreamServices.ratings.endpoints }}
+      endpoint: {{ printf "%s.%s.svc.cluster.local" .Values.upstreamServices.ratings.endpoints .Values.global.namespace}}
       enableXDS: {{ .Values.upstreamServices.ratings.enableXDS }}
       xdsAddr: {{ .Values.global.xdsAddr }}
       xdsAuth: {{ .Values.global.xdsAuth }}

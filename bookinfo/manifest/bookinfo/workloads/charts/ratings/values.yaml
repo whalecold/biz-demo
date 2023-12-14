@@ -4,8 +4,8 @@ service:
 
 upstreamServices:
   ratings:
-    #endpoints: ratings.zls-public-default-group.svc.cluster.local:8083
-    endpoints: ratings.zls-public-default-group.svc.cluster.local
+    #endpoints: ratings.test-public-test.svc.cluster.local:8083
+    endpoints: ratings.test-public-test.svc.cluster.local
     enableXDS: true
 
 image: mse-cn-beijing.cr.volces.com/demo/bookinfo

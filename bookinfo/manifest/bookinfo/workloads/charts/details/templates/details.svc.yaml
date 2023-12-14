@@ -1,3 +1,4 @@
+{{- if .Values.global.k8sRegistry }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,3 +15,5 @@ spec:
     app.kubernetes.io/instance: {{ .Values.service.name }}
     app.kubernetes.io/name: {{ .Values.service.name }}
   type: ClusterIP
+{{- end}}
+

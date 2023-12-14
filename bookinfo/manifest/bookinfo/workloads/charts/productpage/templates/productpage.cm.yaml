@@ -4,12 +4,15 @@ data:
     server:
       addr: "0.0.0.0:{{ .Values.service.port }}"
     reviews:
-      endpoint: {{ .Values.upstreamServices.reviews.endpoints }}
+      endpoint: {{ printf "%s.%s.svc.cluster.local" .Values.upstreamServices.reviews.endpoints .Values.global.namespace}}
       enableXDS: {{ .Values.upstreamServices.reviews.enableXDS }}
       xdsAddr: {{ .Values.global.xdsAddr }}
       xdsAuth: {{ .Values.global.xdsAuth }}
     details:
-      endpoint: {{ .Values.upstreamServices.details.endpoint }}
+      endpoint: {{ printf "%s.%s.svc.cluster.local" .Values.upstreamServices.details.endpoint .Values.global.namespace}}
+      enableXDS: {{ .Values.upstreamServices.details.enableXDS }}
+      xdsAddr: {{ .Values.global.xdsAddr }}
+      xdsAuth: {{ .Values.global.xdsAuth }}
 kind: ConfigMap
 metadata:
   name: {{ .Values.service.name }}

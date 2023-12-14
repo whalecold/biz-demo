@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      # 如果有 header   x-canary：true ，则是灰度流量，
+      # 添加 baggage 染色标签，
+      set $mseTag "meshEnv=mse-base";
+      if ($http_x_canary = "gray") {
+          set $mseTag "meshEnv=gray";
+      }
+      if ($http_x_canary = "blue") {
+          set $mseTag "meshEnv=blue";
+      }
+      proxy_set_header baggage $mseTag;
+    vke.volcengine.com/description: ""
+  name: {{ .Values.service.name }}
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "products"
+    http:
+      paths:
+      - backend:
+          service:
+            name: {{ .Values.service.name }}
+            port:
+              number: 8081
+        path: /products
+        pathType: Prefix

@@ -2,9 +2,11 @@ module github.com/cloudwego/biz-demo/bookinfo
 
 go 1.17
 
-replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
-
-replace github.com/kitex-contrib/xds => github.com/whalecold/xds v0.0.0-20231213151706-1decc2a5a114
+replace (
+	github.com/apache/thrift => github.com/apache/thrift v0.13.0
+	github.com/kitex-contrib/registry-nacos => github.com/whalecold/registry-nacos v0.0.0-20231214081726-ff7ac4b48e45
+	github.com/kitex-contrib/xds => github.com/whalecold/xds v0.0.0-20231213151706-1decc2a5a114
+)
 
 require (
 	code.byted.org/kite/kitex v1.14.1

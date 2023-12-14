@@ -6,12 +6,12 @@ image: mse-cn-beijing.cr.volces.com/demo/bookinfo
 
 upstreamServices:
   reviews:
-    #endpoints: reviews.zls-public-default-group.svc.cluster.local:8082
-    endpoints: reviews.zls-public-default-group.svc.cluster.local
+    #endpoints: reviews.test-public-test.svc.cluster.local:8082
+    endpoints: reviews
     enableXDS: true
   details:
-    #endpoint: details.zls-public-default-group.svc.cluster.local:8084
-    endpoint: details.zls-public-default-group.svc.cluster.local
+    #endpoint: details.test-public-test.svc.cluster.local:8084
+    endpoint: details
     enableXDS: true
 
 otel:

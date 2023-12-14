@@ -30,6 +30,10 @@ spec:
             - {{ .Values.service.name }}
             - --config=config/{{ .Values.service.name }}.yaml
           env:
+            - name: NACOS_ENV_USERNAME
+              value: {{ .Values.global.nacosUsername }}
+            - name: NACOS_ENV_PASSWARD
+              value: {{ .Values.global.nacosPassward }}
             - name: serverAddr
               value: {{ .Values.global.nacosAddress }}
             - name: serverPort
