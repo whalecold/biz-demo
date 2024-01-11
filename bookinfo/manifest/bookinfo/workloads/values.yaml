@@ -1,22 +1,23 @@
 global:
-  image: mse-cn-beijing.cr.volces.com/demo/bookinfo:v0.1.0
+  image: mse-cn-beijing.cr.volces.com/demo/bookinfo:mse
   k8sRegistry: false
-  nacosAddress: 100.66.8.197
+  nacosAddress: nacostest.default
   nacosPort: 8848
   nacosUsername: nacos
   nacosPassward: nacos
-  namespace: "test-public-default-group"
+  namespace: "kitex"
   multiCluster:
-    clusterName: "cclmpjho2pogshaech8ug" # Get the value using "kubectl config get-clusters"
+    clusterName: "" # Get the value using "kubectl config get-clusters"
   xdsAddr: istiod.istio-system.svc:15012 # Set the address of the xDS Server
   xdsAuth: true
   enableTracing: false
+  configNamespace: zls-public-default-group
   v2lane: gray
   v3lane: blue
+  ports:
+    details: "80" 
+    reviews: "80"
+    ratings: "80"
   otel:
     endpoint: http://bookinfo-demo-collector:4317
 
-ports:
-  details: 8084 
-  reviews: 8082
-  ratings: 8083

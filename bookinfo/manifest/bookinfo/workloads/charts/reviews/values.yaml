@@ -5,8 +5,8 @@ service:
 
 upstreamServices:
   ratings:
-    #endpoints: ratings.test-public-test.svc.cluster.local:8083
     endpoints: ratings
+    #endpoints: ratings
     enableXDS: true
 
 image: mse-cn-beijing.cr.volces.com/demo/bookinfo

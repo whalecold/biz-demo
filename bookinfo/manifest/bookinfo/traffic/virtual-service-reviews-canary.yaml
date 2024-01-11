@@ -9,7 +9,7 @@ spec:
     - match:
         - headers:
             baggage:
-              exact: "env=dev"
+              regex: "^env.*dev$"
       route:
         - destination:
             host: reviews

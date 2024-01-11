@@ -6,12 +6,12 @@ image: mse-cn-beijing.cr.volces.com/demo/bookinfo
 
 upstreamServices:
   reviews:
-    #endpoints: reviews.test-public-test.svc.cluster.local:8082
     endpoints: reviews
+    #endpoints: reviews
     enableXDS: true
   details:
-    #endpoint: details.test-public-test.svc.cluster.local:8084
     endpoint: details
+    #endpoint: details
     enableXDS: true
 
 otel:

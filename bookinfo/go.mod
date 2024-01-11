@@ -4,8 +4,8 @@ go 1.17
 
 replace (
 	github.com/apache/thrift => github.com/apache/thrift v0.13.0
-	github.com/kitex-contrib/registry-nacos => github.com/whalecold/registry-nacos v0.0.0-20231214081726-ff7ac4b48e45
-	github.com/kitex-contrib/xds => github.com/whalecold/xds v0.0.0-20231213151706-1decc2a5a114
+	//github.com/kitex-contrib/xds => github.com/whalecold/xds v0.0.0-20231213151706-1decc2a5a114
+	github.com/kitex-contrib/xds => github.com/whalecold/xds v0.0.0-20240109071644-fe06cfcfcdaf
 )
 
 require (
@@ -18,7 +18,7 @@ require (
 	github.com/hertz-contrib/obs-opentelemetry/tracing v0.2.0
 	github.com/kitex-contrib/obs-opentelemetry v0.2.1
 	github.com/kitex-contrib/obs-opentelemetry/logging/logrus v0.0.0-20230219092456-5e6c84962323
-	github.com/kitex-contrib/registry-nacos v0.1.0
+	github.com/kitex-contrib/registry-nacos v0.1.2-0.20240106140414-1c2367c814a5
 	github.com/kitex-contrib/xds v0.2.0
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
@@ -26,6 +26,8 @@ require (
 	go.opentelemetry.io/otel v1.13.0
 	golang.org/x/sync v0.1.0
 )
+
+require github.com/nacos-group/nacos-sdk-go v1.1.4
 
 require (
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.18 // indirect
@@ -70,7 +72,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/gls v0.0.0-20220109145502-612d0167dce5 // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/nacos-group/nacos-sdk-go v1.1.4 // indirect
 	github.com/nyaruka/phonenumbers v1.1.6 // indirect
 	github.com/oleiade/lane v1.0.1 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect

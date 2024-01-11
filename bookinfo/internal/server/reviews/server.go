@@ -100,7 +100,6 @@ func (s *Server) Run(ctx context.Context) error {
 		server.WithServiceAddr(addr),
 		server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
 			ServiceName: constants.ReviewsServiceName,
-			Tags:        utils.ExtractInstanceMeta(),
 		}),
 	}
 

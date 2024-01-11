@@ -16,14 +16,13 @@ spec:
       version: v2
   template:
     metadata:
-      annotations:
-        sidecar.istio.io/inject: "false"
       labels:
         app.kubernetes.io/instance: {{ .Values.service.name }}
         app.kubernetes.io/name: {{ .Values.service.name }}
-        sidecar.mesh.io/protocol: thrift
-        version: v2
+        sidecar.mesh.io/data-plane-mode: "kitex"
+        sidecar.mesh.io/mse-namespace: {{ .Values.global.configNamespace }}
         sidecar.mesh.io/lane: {{ .Values.global.v2lane }}
+        version: v2
     spec:
       containers:
         - args:
@@ -46,16 +45,6 @@ spec:
               value: "5"
             - name: TZ
               value: Asia/Shanghai
-            - name: POD_NAMESPACE
-              value: {{ .Release.Namespace }}
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: INSTANCE_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.podIP
             - name: METRICS_LOG_LEVEL
               value: err
             - name: CONSUL_HTTP_HOST

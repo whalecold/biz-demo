@@ -16,8 +16,6 @@
 package injectors
 
 import (
-	"time"
-
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/details/detailsservice"
 	"github.com/cloudwego/biz-demo/bookinfo/pkg/constants"
 	"github.com/cloudwego/biz-demo/bookinfo/pkg/metadata"
@@ -26,7 +24,6 @@ import (
 	"github.com/cloudwego/kitex/pkg/xds"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	xdsmanager "github.com/kitex-contrib/xds"
-	"github.com/kitex-contrib/xds/core/manager"
 	"github.com/kitex-contrib/xds/xdssuite"
 )
 
@@ -54,19 +51,12 @@ func DefaultDetailsClientOptions() *DetailsClientOptions {
 // 3、enable opentelemetry
 func ProvideDetailsClient(opts *DetailsClientOptions) (detailsservice.Client, error) {
 	if opts.EnableXDS {
-		if err := xdsmanager.Init(
-			xdsmanager.WithXDSServerConfig(&manager.XDSServerConfig{
-				SvrName: constants.IstiodSvrName,
-				SvrAddr: opts.XDSAddr,
-				XDSAuth: opts.XDSAuth,
-			}),
-		); err != nil {
+		if err := xdsmanager.Init(xdsmanager.WithXDSServer()); err != nil {
 			klog.Fatal(err)
 		}
 		return detailsservice.NewClient(
 			opts.Endpoint,
 			kclient.WithSuite(tracing.NewClientSuite()),
-			kclient.WithRPCTimeout(time.Second*10),
 			kclient.WithXDSSuite(xds.ClientSuite{
 				RouterMiddleware: xdssuite.NewXDSRouterMiddleware(
 					xdssuite.WithRouterMetaExtractor(metadata.ExtractFromPropagator),

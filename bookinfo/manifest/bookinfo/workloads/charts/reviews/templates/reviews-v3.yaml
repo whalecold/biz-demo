@@ -15,13 +15,13 @@ spec:
   template:
     metadata:
       annotations:
-        sidecar.istio.io/inject: "false"
         checksum/config: {{ include (print $.Template.BasePath "/reviews.cm.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/instance: {{ .Values.service.name }}
         app.kubernetes.io/name: {{ .Values.service.name }}
-        sidecar.mesh.io/protocol: thrift
         sidecar.mesh.io/lane: {{.Values.global.v3lane}}
+        sidecar.mesh.io/data-plane-mode: "kitex"
+        sidecar.mesh.io/mse-namespace: {{ .Values.global.configNamespace }}
         version: v3
     spec:
       containers:
@@ -45,8 +45,6 @@ spec:
               value: {{ .Values.global.otel.endpoint }}
             - name: TZ
               value: Asia/Shanghai
-            - name: POD_NAMESPACE
-              value: {{ .Release.Namespace }}
             - name: POD_NAME
               valueFrom:
                 fieldRef:
@@ -62,8 +60,6 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: status.hostIP
-            - name: ISTIO_META_CLUSTER_ID
-              value: {{ .Values.global.multiCluster.clusterName }}
           image: {{ .Values.global.image }}
           imagePullPolicy: Always
           name: server

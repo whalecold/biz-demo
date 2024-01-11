@@ -121,7 +121,7 @@ test:
 
 build-local:
 	@go build -v -o $(OUTPUT_DIR)/$(NAME)                                  \
-	  -ldflags "-s -w -X $(GOCOMMON)/version.module=$(NAME)                \
+	  -ldflags "-X $(GOCOMMON)/version.module=$(NAME)                \
 	    -X $(GOCOMMON)/version.version=$(VERSION)                          \
 	    -X $(GOCOMMON)/version.branch=$(BRANCH)                            \
 	    -X $(GOCOMMON)/version.gitCommit=$(GITCOMMIT)                      \

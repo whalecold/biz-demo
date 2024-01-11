@@ -17,13 +17,12 @@ spec:
   template:
     metadata:
       annotations:
-        sidecar.istio.io/inject: "false"
         checksum/config: {{ include (print $.Template.BasePath "/ratings.cm.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/instance: {{ .Values.service.name }}
         app.kubernetes.io/name: {{ .Values.service.name }}
-        sidecar.mesh.io/lane: mse-base
-        sidecar.mesh.io/protocol: thrift
+        sidecar.mesh.io/data-plane-mode: "kitex"
+        sidecar.mesh.io/mse-namespace: {{ .Values.global.configNamespace }}
         version: v1
     spec:
       containers:
@@ -47,13 +46,6 @@ spec:
               value: "1"
             - name: TZ
               value: Asia/Shanghai
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  apiVersion: v1
-                  fieldPath: metadata.name
-            - name: POD_NAMESPACE
-              value: {{ .Release.Namespace }}
             - name: CONSUL_HTTP_HOST
               valueFrom:
                 fieldRef:
