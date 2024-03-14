@@ -59,6 +59,7 @@ func DefaultServerOptions() *ServerOptions {
 
 // Run ratings server
 func (s *Server) Run(ctx context.Context) error {
+
 	klog.SetLogger(kitexlogrus.NewLogger())
 	klog.SetLevel(s.opts.LogLevel.KitexLogLevel())
 

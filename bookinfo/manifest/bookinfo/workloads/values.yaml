@@ -1,5 +1,5 @@
 global:
-  image: mse-cn-beijing.cr.volces.com/demo/bookinfo:mse
+  image: mse-cn-beijing.cr.volces.com/demo/bookinfo:mse.1
   k8sRegistry: false
   nacosAddress: nacostest.default
   nacosPort: 8848

@@ -17,6 +17,8 @@ package details
 
 import (
 	"context"
+	"os"
+	"time"
 
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/details"
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -34,6 +36,14 @@ func New() details.DetailsService {
 func (i *impl) GetProduct(ctx context.Context, req *details.GetProductReq) (r *details.GetProductResp, err error) {
 	klog.CtxInfof(ctx, "get product details %s", req.ID)
 	klog.CtxDebugf(ctx, "baggage: %s", baggage.FromContext(ctx).String())
+
+	val := os.Getenv("INJECT_DELAY")
+	delay, err := time.ParseDuration(val)
+	if err == nil {
+		time.Sleep(delay)
+	} else {
+		klog.CtxInfof(ctx, "parse inject delay failed %s:%s", val, err)
+	}
 
 	return &details.GetProductResp{
 		Product: &details.Product{

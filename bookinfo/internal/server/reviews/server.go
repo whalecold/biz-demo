@@ -28,6 +28,7 @@ import (
 	"github.com/cloudwego/biz-demo/bookinfo/pkg/constants"
 	"github.com/cloudwego/biz-demo/bookinfo/pkg/utils"
 	"github.com/cloudwego/biz-demo/bookinfo/pkg/utils/logutils"
+
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/server"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"

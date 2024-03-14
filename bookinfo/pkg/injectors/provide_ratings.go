@@ -18,10 +18,8 @@ package injectors
 import (
 	"github.com/cloudwego/biz-demo/bookinfo/kitex_gen/cwg/bookinfo/ratings/ratingservice"
 	"github.com/cloudwego/biz-demo/bookinfo/pkg/constants"
-	"github.com/cloudwego/biz-demo/bookinfo/pkg/metadata"
 	kclient "github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/klog"
-	"github.com/cloudwego/kitex/pkg/xds"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	xdsmanager "github.com/kitex-contrib/xds"
 	"github.com/kitex-contrib/xds/xdssuite"
@@ -50,18 +48,13 @@ func DefaultRatingsClientOptions() *RatingsClientOptions {
 // 3、enable opentelemetry
 func ProvideRatingsClient(opts *RatingsClientOptions) (ratingservice.Client, error) {
 	if opts.EnableXDS {
-		if err := xdsmanager.Init(xdsmanager.WithXDSServer()); err != nil {
+		if err := xdsmanager.Init(); err != nil {
 			klog.Fatal(err)
 		}
 		return ratingservice.NewClient(
 			opts.Endpoint,
 			kclient.WithSuite(tracing.NewClientSuite()),
-			kclient.WithXDSSuite(xds.ClientSuite{
-				RouterMiddleware: xdssuite.NewXDSRouterMiddleware(
-					xdssuite.WithRouterMetaExtractor(metadata.ExtractFromPropagator),
-				),
-				Resolver: xdssuite.NewXDSResolver(),
-			}),
+			kclient.WithSuite(xdssuite.NewClientSuite(xdssuite.WithRouterMetaExtractor(tracing.ExtractFromPropagator))),
 		)
 	}
 

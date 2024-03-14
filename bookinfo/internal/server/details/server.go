@@ -32,6 +32,8 @@ import (
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	"github.com/kitex-contrib/registry-nacos/nacos"
 	"github.com/kitex-contrib/registry-nacos/registry"
+	xdsmanager "github.com/kitex-contrib/xds"
+	"github.com/kitex-contrib/xds/xdssuite"
 )
 
 // Server kitex server
@@ -58,6 +60,9 @@ func DefaultServerOptions() *ServerOptions {
 
 // Run kitex server
 func (s *Server) Run(ctx context.Context) error {
+	if err := xdsmanager.Init(); err != nil {
+		klog.Fatal(err)
+	}
 	klog.SetLogger(kitexlogrus.NewLogger())
 	klog.SetLevel(s.opts.LogLevel.KitexLogLevel())
 
@@ -90,6 +95,8 @@ func (s *Server) Run(ctx context.Context) error {
 	if s.opts.EnableTracing {
 		opts = append(opts, server.WithSuite(tracing.NewServerSuite()))
 	}
+
+	opts = append(opts, server.WithSuite(xdssuite.NewServerSuite()))
 
 	klog.Infof("init nacos registry client completed.")
 	svr := detailsservice.NewServer(s.svc, opts...)
